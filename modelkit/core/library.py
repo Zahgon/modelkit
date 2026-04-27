@@ -128,26 +128,11 @@ class ModelLibrary:
 
     @property
     def assets_manager(self):
-        if self._assets_manager is None:
-            logger.info("Instantiating AssetsManager", lazy_loading=self._lazy_loading)
-            self._assets_manager = AssetsManager(**self.assetsmanager_settings)
-        return self._assets_manager
+        pass
 
     @property
     def override_assets_manager(self):
-        if not self.settings.override_assets_dir:
-            return None
-
-        if self._override_assets_manager is None:
-            logger.info(
-                "Instantiating Override AssetsManager", lazy_loading=self._lazy_loading
-            )
-            self._override_assets_manager = AssetsManager(
-                assets_dir=self.settings.override_assets_dir
-            )
-            self._override_assets_manager.storage_provider = None
-
-        return self._override_assets_manager
+        pass
 
     def get(self, name, model_type: Optional[Type[T]] = None) -> T:
         """
@@ -354,9 +339,7 @@ class ModelLibrary:
 
     def preload(self):
         # make sure the assets_manager is instantiated
-        _ = self.assets_manager
-        for model_name in self.required_models:
-            self._load(model_name)
+        pass
 
     def close(self):
         for model in self.models.values():
@@ -366,11 +349,7 @@ class ModelLibrary:
                 AsyncToSync(model.close)()
 
     async def aclose(self):
-        for model in self.models.values():
-            if isinstance(model, Model):
-                model.close()
-            if isinstance(model, AsyncModel):
-                await model.close()
+        pass
 
     def describe(self, console=None) -> None:
         if not console:

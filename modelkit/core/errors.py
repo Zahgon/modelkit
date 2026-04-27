@@ -78,14 +78,7 @@ def is_modelkit_internal_frame(frame: types.FrameType):
     """
     Guess whether the frame originates from a submodule of `modelkit`
     """
-    try:
-        mod = inspect.getmodule(frame)
-        if mod:
-            frame_package = __package__.split(".")[0]
-            return frame_package == "modelkit"
-    except BaseException:
-        pass
-    return False
+    pass
 
 
 def strip_modelkit_traceback_frames(exc: BaseException):
@@ -93,11 +86,7 @@ def strip_modelkit_traceback_frames(exc: BaseException):
     Walk the traceback and remove frames that originate from within modelkit
     Return an exception with the filtered traceback
     """
-    tb = None
-    for tb_frame, _ in reversed(list(traceback.walk_tb(exc.__traceback__))):
-        if not is_modelkit_internal_frame(tb_frame):
-            tb = types.TracebackType(tb, tb_frame, tb_frame.f_lasti, tb_frame.f_lineno)
-    return exc.with_traceback(tb)
+    pass
 
 
 T = TypeVar("T", bound=Callable[..., Any])
@@ -106,73 +95,19 @@ T = TypeVar("T", bound=Callable[..., Any])
 # Decorators to wrap prediction methods to simplify tracebacks
 def wrap_modelkit_exceptions(func: T) -> T:
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if kwargs.pop("__internal", False):
-            return func(*args, **kwargs)
-        else:
-            try:
-                return func(*args, **kwargs)
-            except PredictionError as exc:
-                if os.environ.get("MODELKIT_ENABLE_SIMPLE_TRACEBACK", "True") == "True":
-                    raise strip_modelkit_traceback_frames(exc.exc) from exc
-                raise exc.exc from exc
-            except BaseException:
-                raise
-
-    return cast(T, wrapper)
+    pass
 
 
 def wrap_modelkit_exceptions_gen(func: T) -> T:
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if kwargs.pop("__internal", False):
-            yield from func(*args, **kwargs)
-        else:
-            try:
-                yield from func(*args, **kwargs)
-            except PredictionError as exc:
-                if os.environ.get("MODELKIT_ENABLE_SIMPLE_TRACEBACK", "True") == "True":
-                    raise strip_modelkit_traceback_frames(exc.exc) from exc
-                raise exc.exc from exc
-            except BaseException:
-                raise
-
-    return cast(T, wrapper)
+    pass
 
 
 def wrap_modelkit_exceptions_async(func: T) -> T:
     @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        if kwargs.pop("__internal", False):
-            return await func(*args, **kwargs)
-        else:
-            try:
-                return await func(*args, **kwargs)
-            except PredictionError as exc:
-                if os.environ.get("MODELKIT_ENABLE_SIMPLE_TRACEBACK", "True") == "True":
-                    raise strip_modelkit_traceback_frames(exc.exc) from exc
-                raise exc.exc from exc
-            except BaseException:
-                raise
-
-    return cast(T, wrapper)
+    pass
 
 
 def wrap_modelkit_exceptions_gen_async(func: T) -> T:
     @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        if kwargs.pop("__internal", False):
-            async for x in func(*args, **kwargs):
-                yield x
-        else:
-            try:
-                async for x in func(*args, **kwargs):
-                    yield x
-            except PredictionError as exc:
-                if os.environ.get("MODELKIT_ENABLE_SIMPLE_TRACEBACK", "True") == "True":
-                    raise strip_modelkit_traceback_frames(exc.exc) from exc
-                raise exc.exc from exc
-            except BaseException:
-                raise
-
-    return cast(T, wrapper)
+    pass

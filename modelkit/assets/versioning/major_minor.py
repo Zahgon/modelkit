@@ -20,7 +20,7 @@ class MajorVersionDoesNotExistError(errors.InvalidVersionError):
 class MajorMinorAssetsVersioningSystem(versioning.AssetsVersioningSystem):
     @classmethod
     def get_initial_version(cls) -> str:
-        return "0.0"
+        pass
 
     @classmethod
     def check_version_valid(cls, version: str):
@@ -41,39 +41,13 @@ class MajorMinorAssetsVersioningSystem(versioning.AssetsVersioningSystem):
     @classmethod
     def sort_versions(cls, version_list: typing.Iterable[str]) -> typing.List[str]:
         def _key(v):
-            maj_v, min_v = cls._parse_version(v)
-            if min_v is None:
-                min_v = 0
-            return maj_v, min_v
+            pass
 
         return sorted(version_list, reverse=True, key=_key)
 
     @classmethod
     def get_update_cli_params(cls, **kwargs) -> typing.Dict[str, typing.Any]:
-        current_major_version = None
-        if kwargs["version"]:
-            current_major_version, _ = cls._parse_version_str(kwargs["version"])
-        major_versions = {cls._parse_version_str(v)[0] for v in kwargs["version_list"]}
-        display = [
-            f'Found a total of {len(kwargs["version_list"])} versions ',
-            f"({len(major_versions)} major versions) ",
-        ]
-        for major_version in sorted(major_versions):
-            display.append(
-                f" - major `{major_version}` = "
-                + ", ".join(
-                    cls.filter_versions(
-                        kwargs["version_list"], major=str(major_version)
-                    )
-                )
-            )
-        return {
-            "display": "\n".join(display),
-            "params": {
-                "bump_major": kwargs["bump_major"],
-                "major": current_major_version,
-            },
-        }
+        pass
 
     @classmethod
     def get_latest_partial_version(
@@ -118,23 +92,7 @@ class MajorMinorAssetsVersioningSystem(versioning.AssetsVersioningSystem):
         version_list: typing.Optional[typing.List[str]] = None,
         params: typing.Optional[typing.Dict[str, str]] = None,
     ) -> str:
-        version_list = version_list or []
-        params = params or {}
-
-        if params["bump_major"]:
-            version = cls.latest_version(version_list)
-        else:
-            version = cls.latest_version(version_list, major=params["major"])
-
-        v_major, v_minor = cls._parse_version(version)
-
-        if params["bump_major"]:
-            v_major += 1
-            v_minor = 0
-        else:
-            v_minor += 1
-
-        return f"{v_major}.{v_minor}"
+        pass
 
     @staticmethod
     def filter_versions(version_list, major):
@@ -144,9 +102,4 @@ class MajorMinorAssetsVersioningSystem(versioning.AssetsVersioningSystem):
 
     @classmethod
     def latest_version(cls, version_list, major=None):
-        if major:
-            filtered_version_list = list(cls.filter_versions(version_list, major))
-            if not filtered_version_list:
-                raise MajorVersionDoesNotExistError(major)
-            return cls.sort_versions(filtered_version_list)[0]
-        return cls.sort_versions(version_list)[0]
+        pass

@@ -45,7 +45,7 @@ class ModelkitAPIRouter(fastapi.APIRouter):
         )
 
     async def _on_shutdown(self):
-        await self.lib.aclose()
+        pass
 
 
 class ModelkitAutoAPIRouter(ModelkitAPIRouter):
@@ -124,42 +124,10 @@ class ModelkitAutoAPIRouter(ModelkitAPIRouter):
             logger.info("Added model to service", name=model_name, path=path)
 
     def _make_model_endpoint_fn(self, model, item_type):
-        if isinstance(model, AsyncModel):
-
-            async def _aendpoint(
-                item: item_type = fastapi.Body(...),
-                model=fastapi.Depends(lambda: self.lib.get(model.configuration_key)),
-            ):
-                return await model.predict(item)
-
-            return _aendpoint
-
-        def _endpoint(
-            item: item_type = fastapi.Body(...),
-            model=fastapi.Depends(lambda: self.lib.get(model.configuration_key)),
-        ):
-            return model.predict(item)
-
-        return _endpoint
+        pass
 
     def _make_batch_model_endpoint_fn(self, model, item_type):
-        if isinstance(model, AsyncModel):
-
-            async def _aendpoint(
-                item: List[item_type] = fastapi.Body(...),
-                model=fastapi.Depends(lambda: self.lib.get(model.configuration_key)),
-            ):
-                return await model.predict_batch(item)
-
-            return _aendpoint
-
-        def _endpoint(
-            item: List[item_type] = fastapi.Body(...),
-            model=fastapi.Depends(lambda: self.lib.get(model.configuration_key)),
-        ):
-            return model.predict_batch(item)
-
-        return _endpoint
+        pass
 
 
 def create_modelkit_app(models=None, required_models=None):

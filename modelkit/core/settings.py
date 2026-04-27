@@ -56,9 +56,7 @@ class TFServingSettings(ModelkitSettings):
     @pydantic.field_validator("port")
     @classmethod
     def default_serving_port(cls, v, values):
-        if not v:
-            v = 8500 if values.get("mode") == "grpc" else 8501
-        return v
+        pass
 
 
 class CacheSettings(ModelkitSettings):
@@ -94,24 +92,11 @@ class NativeCacheSettings(CacheSettings):
 
 
 def cache_settings():
-    s = CacheSettings()
-
-    if s.cache_provider == "none":
-        return None
-    elif s.cache_provider == "redis":
-        return RedisSettings()
-    elif s.cache_provider == "native":
-        return NativeCacheSettings()
-    else:
-        return None
+    pass
 
 
 def _get_library_settings_cache_provider(v: Optional[str]) -> str:
-    if v is None:
-        return "none"
-    elif isinstance(v, dict):
-        return v.get("cache_provider", "none")
-    return getattr(v, "cache_provider", "none")
+    pass
 
 
 class LibrarySettings(ModelkitSettings):

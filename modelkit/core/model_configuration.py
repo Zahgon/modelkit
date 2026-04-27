@@ -27,11 +27,7 @@ class ModelConfiguration(ModelkitSettings):
     @pydantic.field_validator("model_dependencies", mode="before")
     @classmethod
     def validate_dependencies(cls, v):
-        if v is None:
-            return {}
-        if isinstance(v, (list, set)):
-            return {key: key for key in v}
-        return v
+        pass
 
 
 def walk_module_objects(mod, already_seen):

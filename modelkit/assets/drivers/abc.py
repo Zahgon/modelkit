@@ -65,7 +65,7 @@ class StorageDriver(abc.ABC):
 
     @property
     def client(self):
-        return self._client or self.build_client(self.client_configuration)
+        pass
 
     @staticmethod
     @abc.abstractmethod

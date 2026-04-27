@@ -11,7 +11,7 @@ DATE_RE = r"^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z$"
 class SimpleDateAssetsVersioningSystem(versioning.AssetsVersioningSystem):
     @classmethod
     def get_initial_version(cls) -> str:
-        return _utcnow()
+        pass
 
     @classmethod
     def check_version_valid(cls, version: str):
@@ -24,15 +24,7 @@ class SimpleDateAssetsVersioningSystem(versioning.AssetsVersioningSystem):
 
     @classmethod
     def get_update_cli_params(cls, **kwargs) -> typing.Dict[str, typing.Any]:
-        display: typing.List[str] = []
-        display.append(f'Found a total of {len(kwargs["version_list"])} versions ')
-        display.append(f'{kwargs["version_list"]}')
-        display.append(f'Last version is {kwargs["version_list"][0]}')
-
-        return {
-            "display": "\n".join(display),
-            "params": {},
-        }
+        pass
 
     @classmethod
     def increment_version(
@@ -40,9 +32,9 @@ class SimpleDateAssetsVersioningSystem(versioning.AssetsVersioningSystem):
         version_list: typing.Optional[typing.List[str]] = None,
         params: typing.Optional[typing.Dict[str, str]] = None,
     ) -> str:
-        return _utcnow()
+        pass
 
 
 def _utcnow() -> str:
     """string iso format in UTC"""
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%SZ")
+    pass

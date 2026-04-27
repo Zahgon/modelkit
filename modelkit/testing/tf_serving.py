@@ -25,7 +25,7 @@ def tf_serving_fixture(request, lib, tf_version, deployment="docker"):
         )
 
         def finalize():
-            proc.terminate()
+            pass
 
     else:
         deploy_tf_models(lib, "local-docker", config_name="testing")
@@ -54,8 +54,7 @@ def tf_serving_fixture(request, lib, tf_version, deployment="docker"):
         )
 
         def finalize():
-            subprocess.call(["docker", "kill", "modelkit-tfserving-tests"])
-            tfserving_proc.terminate()
+            pass
 
     request.addfinalizer(finalize)
     connect_tf_serving(

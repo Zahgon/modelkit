@@ -18,14 +18,12 @@ def retry_policy(type_error=None):
     if not type_error:
 
         def is_retry_eligible(error):
-            return isinstance(error, requests.exceptions.ChunkedEncodingError)
+            pass
 
     else:
 
         def is_retry_eligible(error):
-            return isinstance(error, type_error) or isinstance(
-                error, requests.exceptions.ChunkedEncodingError
-            )
+            pass
 
     return {
         "wait": wait_random_exponential(multiplier=1, min=4, max=10),

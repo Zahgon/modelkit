@@ -45,28 +45,15 @@ class AzureStorageDriver(StorageDriver):
 
     @staticmethod
     def build_client(client_configuration: Dict[str, str]) -> BlobServiceClient:
-        connection_string = client_configuration.get("connection_string")
-        if not connection_string:
-            raise ValueError(
-                "Connection string needs to be set for Azure storage driver"
-            )
-        return BlobServiceClient.from_connection_string(connection_string)
+        pass
 
     @retry(**AZURE_RETRY_POLICY)
     def iterate_objects(self, prefix=None):
-        container = self.client.get_container_client(self.bucket)
-        for blob in container.list_blobs(name_starts_with=prefix):
-            yield blob["name"]
+        pass
 
     @retry(**AZURE_RETRY_POLICY)
     def upload_object(self, file_path, object_name):
-        blob_client = self.client.get_blob_client(
-            container=self.bucket, blob=object_name
-        )
-        if blob_client.exists():
-            self.delete_object(object_name)
-        with open(file_path, "rb") as f:
-            blob_client.upload_blob(f)
+        pass
 
     @retry(**AZURE_RETRY_POLICY)
     def download_object(self, object_name, destination_path):
@@ -87,10 +74,7 @@ class AzureStorageDriver(StorageDriver):
 
     @retry(**AZURE_RETRY_POLICY)
     def delete_object(self, object_name):
-        blob_client = self.client.get_blob_client(
-            container=self.bucket, blob=object_name
-        )
-        blob_client.delete_blob()
+        pass
 
     @retry(**AZURE_RETRY_POLICY)
     def exists(self, object_name):

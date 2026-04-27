@@ -33,9 +33,7 @@ def log_after_retry(retry_state):
 
 
 def retriable_error(exception):
-    return isinstance(
-        exception, aiohttp.client_exceptions.ClientConnectorError
-    ) or isinstance(exception, requests.exceptions.ConnectionError)
+    pass
 
 
 @dataclass

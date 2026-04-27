@@ -55,19 +55,7 @@ def modellibrary_auto_test(
     @pytest.mark.parametrize("model_key, item, result, kwargs", test_cases)
     def test_function(model_key, item, result, kwargs, request):
         # get the above fixture by name
-        lib = request.getfixturevalue(fixture_name)
-        pred = lib.get(model_key)(item, **kwargs)
-        if isinstance(result, JSONTestResult):
-            ref = ReferenceJson(os.path.join(test_dir, os.path.dirname(result.fn)))
-            if isinstance(pred, pydantic.BaseModel):
-                pred = pred.model_dump()
-            ref.assert_equal(os.path.basename(result.fn), pred)
-        elif has_numpy and isinstance(result, np.ndarray):
-            assert np.array_equal(pred, result), f"{pred} != {result}"
-        else:
-            if isinstance(pred, pydantic.BaseModel) and isinstance(result, dict):
-                pred = pred.model_dump()
-            assert pred == result, f"{pred} != {result}"
+        pass
 
     # in order for the above functions to be collected by pytest, add them
     # to the caller's local variables under their desired names
@@ -92,16 +80,7 @@ def modellibrary_fixture(
     #  create a named fixture with the ModelLibrary
     @pytest.fixture(name=fixture_name, scope=fixture_scope)
     def fixture_function(request):
-        if necessary_fixtures:
-            for fixture_name in necessary_fixtures:
-                request.getfixturevalue(fixture_name)
-        return ModelLibrary(
-            settings=settings,
-            assetsmanager_settings=assetsmanager_settings,
-            configuration=configuration,
-            models=models,
-            required_models=required_models,
-        )
+        pass
 
     # in order for the above functions to be collected by pytest, add them
     # to the caller's local variables under their desired names

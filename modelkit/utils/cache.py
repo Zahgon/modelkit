@@ -60,10 +60,7 @@ class RedisCache(Cache):
         return CacheItem(item, cache_key, pickle.loads(r), False)
 
     def set(self, k: bytes, d: Any):
-        if isinstance(d, pydantic.BaseModel):
-            self.redis.set(k, pickle.dumps(d.model_dump()))
-        else:
-            self.redis.set(k, pickle.dumps(d))
+        pass
 
 
 class NativeCache(Cache):
@@ -90,4 +87,4 @@ class NativeCache(Cache):
         return CacheItem(item, cache_key, r, False)
 
     def set(self, k: bytes, d: Any):
-        self.cache.setdefault(k, d)
+        pass

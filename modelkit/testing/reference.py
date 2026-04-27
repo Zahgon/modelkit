@@ -19,11 +19,7 @@ def _diff_lines(ref_name, ref_lines, lines):
 
 
 def json_serializer(obj):
-    if isinstance(obj, datetime.date):
-        return obj.isoformat()
-    elif isinstance(obj, decimal.Decimal):
-        return str(obj)
-    raise TypeError("Unexpected " + obj.__class__.__name__)
+    pass
 
 
 DUMP_KWARGS = {
@@ -106,10 +102,7 @@ class ReferenceText(Reference):
 
 
 def click_invoke(runner, cmd_fn, args, env=None):
-    res = runner.invoke(cmd_fn, args, env=env)
-    if res.exception is not None and res.exc_info[0] != SystemExit:
-        traceback.print_exception(*res.exc_info)
-    return res
+    pass
 
 
 def deep_format_floats(obj, depth=5):

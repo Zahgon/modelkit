@@ -159,129 +159,19 @@ class StorageProvider:
         """
         Upload a new asset
         """
-        versions_object_name = self.get_versions_object_name(name)
-        if self.driver.exists(versions_object_name):
-            raise errors.AssetAlreadyExistsError(name)
-        logger.info("Pushing new asset", name=name, asset_path=asset_path)
-        self.push(asset_path, name, version, dry_run=dry_run)
-
-        with tempfile.TemporaryDirectory() as dversions:
-            with open(os.path.join(dversions, "versions.json"), "w") as f:
-                json.dump({"versions": [version]}, f)
-            logger.debug("Pushing versions file", name=name)
-            if not dry_run:
-                self.driver.upload_object(
-                    os.path.join(dversions, "versions.json"),
-                    versions_object_name,
-                )
+        pass
 
     def update(self, asset_path: str, name: str, version: str, dry_run=False):
         """
         Update an existing asset version
         """
-        spec = AssetSpec(name=name, version=version)
-        versions_object_name = self.get_versions_object_name(spec.name)
-        if not self.driver.exists(versions_object_name):
-            raise errors.AssetDoesNotExistError(spec.name)
-        logger.info(
-            "Updating asset",
-            name=spec.name,
-            version=spec.version,
-            asset_path=asset_path,
-        )
-        versions_list = self.get_versions_info(spec.name)
-
-        self.push(asset_path, spec.name, spec.version, dry_run=dry_run)
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            versions_fn = os.path.join(tmp_dir, "versions.json")
-            versions = spec.sort_versions([spec.version] + versions_list)
-            with open(versions_fn, "w") as f:
-                json.dump({"versions": versions}, f)
-            logger.debug(
-                "Pushing updated versions file",
-                name=spec.name,
-                versions=versions,
-            )
-            if not dry_run:
-                self.driver.upload_object(versions_fn, versions_object_name)
+        pass
 
     def push(self, asset_path, name, version, dry_run=False):
         """
         Push asset
         """
-        with ContextualizedLogging(
-            name=name,
-            version=version,
-            asset_path=asset_path,
-        ):
-            logger.info("Pushing asset")
-
-            object_name = self.get_object_name(name, version)
-            if self.driver.exists(object_name):
-                raise errors.AssetAlreadyExistsError(
-                    f"`{name}` already exists, cannot"
-                    f" overwrite asset for version `{version}`"
-                )
-
-            meta = {
-                "push_date": datetime.datetime.now(tz.UTC).isoformat(),
-                "is_directory": os.path.isdir(asset_path),
-            }
-            if meta["is_directory"]:
-                asset_path += "/" if not asset_path.endswith("/") else ""
-                meta["contents"] = sorted(
-                    f[len(asset_path) :]
-                    for f in glob.iglob(
-                        os.path.join(asset_path, "**/*"), recursive=True
-                    )
-                    if os.path.isfile(f)
-                )
-                logger.info(
-                    "Pushing multi-part asset file",
-                    n_parts=len(meta["contents"]),
-                )
-                for part_no, part in enumerate(meta["contents"]):
-                    path_to_push = os.path.join(asset_path, part)
-                    remote_object_name = "/".join(
-                        x
-                        for x in object_name.split("/") + list(os.path.split(part))
-                        if x
-                    )
-                    logger.debug(
-                        "Pushing multi-part asset file",
-                        object_name=remote_object_name,
-                        path_to_push=path_to_push,
-                        part=part,
-                        part_no=part_no,
-                        n_parts=len(meta["contents"]),
-                    )
-                    if not dry_run:
-                        self.driver.upload_object(path_to_push, remote_object_name)
-                logger.info(
-                    "Pushed multi-part asset file",
-                    n_parts=len(meta["contents"]),
-                )
-            else:
-                logger.info(
-                    "Pushing asset file",
-                    object_name=object_name,
-                )
-                if not dry_run:
-                    self.driver.upload_object(asset_path, object_name)
-
-            with tempfile.TemporaryDirectory() as tmp_dir:
-                meta_file_path = os.path.join(tmp_dir, "asset.meta")
-                with open(meta_file_path, "w", encoding="utf-8") as fmeta:
-                    json.dump(meta, fmeta)
-
-                logger.debug(
-                    "Pushing meta file",
-                    meta=meta,
-                    meta_object_name=object_name + ".meta",
-                )
-                if not dry_run:
-                    self.driver.upload_object(meta_file_path, object_name + ".meta")
+        pass
 
     def download(self, name, version, destination):
         """
@@ -351,13 +241,4 @@ class StorageProvider:
             return {"path": destination_path, "meta": meta}
 
     def iterate_assets(self):
-        assets_set = set()
-        for asset_path in self.driver.iterate_objects(self.prefix):
-            if asset_path.endswith(".versions"):
-                asset_name = "/".join(
-                    asset_path[len(self.prefix) + 1 : -len(".versions")].split("/")
-                )
-                assets_set.add(asset_name)
-        for asset_name in sorted(assets_set):
-            versions_list = self.get_versions_info(asset_name)
-            yield (asset_name, versions_list)
+        pass

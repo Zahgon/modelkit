@@ -73,30 +73,15 @@ class S3StorageDriver(StorageDriver):
 
     @staticmethod
     def build_client(client_configuration: Dict[str, str]) -> boto3.client:
-        return boto3.client("s3", **client_configuration)
+        pass
 
     @retry(**S3_RETRY_POLICY)
     def iterate_objects(self, prefix=None):
-        paginator = self.client.get_paginator("list_objects_v2")
-        pages = paginator.paginate(Bucket=self.bucket, Prefix=prefix or "")
-        for page in pages:
-            for obj in page.get("Contents", []):
-                yield obj["Key"]
+        pass
 
     @retry(**S3_RETRY_POLICY)
     def upload_object(self, file_path, object_name):
-        if self.aws_kms_key_id:
-            self.client.upload_file(  # pragma: no cover
-                file_path,
-                self.bucket,
-                object_name,
-                ExtraArgs={
-                    "ServerSideEncryption": "aws:kms",
-                    "SSEKMSKeyId": self.aws_kms_key_id,
-                },
-            )
-        else:
-            self.client.upload_file(file_path, self.bucket, object_name)
+        pass
 
     @retry(**S3_RETRY_POLICY)
     def download_object(self, object_name, destination_path):
@@ -114,7 +99,7 @@ class S3StorageDriver(StorageDriver):
 
     @retry(**S3_RETRY_POLICY)
     def delete_object(self, object_name):
-        self.client.delete_object(Bucket=self.bucket, Key=object_name)
+        pass
 
     @retry(**S3_RETRY_POLICY)
     def exists(self, object_name):

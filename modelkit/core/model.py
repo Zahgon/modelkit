@@ -46,14 +46,7 @@ ModelDependency = TypeVar(
 
 def modelkit_predict_profiler(func):
     @functools.wraps(func)
-    def wrapper(self, *args, **kwargs):
-        with ExitStack() as stack:
-            if hasattr(self, "profiler"):
-                stack.enter_context(self.profiler.profile(self.configuration_key))
-            vals = func(self, *args, **kwargs)
-            yield from vals
-
-    return wrapper
+    pass
 
 
 class ModelDependenciesMapping:
@@ -219,39 +212,7 @@ class AbstractModel(Asset, Generic[ItemType, ReturnType]):
         self._check_is_overriden()
 
     def initialize_validation_models(self):
-        try:
-            # Get the values of the T and V types
-            generic_aliases = [
-                t
-                for t in self.__orig_bases__
-                if isinstance(t, typing._GenericAlias)
-                and issubclass(t.__origin__, AbstractModel)
-            ]
-            if len(generic_aliases):
-                _item_type, _return_type = generic_aliases[0].__args__
-                if _item_type != ItemType:
-                    self._item_type = _item_type
-                    type_name = self.__class__.__name__ + "ItemTypeModel"
-                    self._item_model = pydantic.create_model(
-                        type_name,
-                        #  The order of the Union arguments matter here, in order
-                        #  to make sure that lists of items and single items
-                        # are correctly validated
-                        data=(self._item_type, ...),
-                        __base__=InternalDataModel,
-                    )
-                if _return_type != ReturnType:
-                    self._return_type = _return_type
-                    type_name = self.__class__.__name__ + "ReturnTypeModel"
-                    self._return_model = pydantic.create_model(
-                        type_name,
-                        data=(self._return_type, ...),
-                        __base__=InternalDataModel,
-                    )
-        except Exception as exc:  # pragma: no cover
-            raise errors.ValidationInitializationException(
-                f"{self.__class__.__name__}[{self.configuration_key}]", pydantic_exc=exc
-            ) from exc
+        pass
 
     def __getstate__(self):
         state = copy.deepcopy(self.__dict__)
@@ -397,45 +358,10 @@ class AbstractModel(Asset, Generic[ItemType, ReturnType]):
         return item
 
     def test(self):
-        console = Console()
-        for i, (model_key, item, expected, keyword_args) in enumerate(
-            self._iterate_test_cases(model_key=self.configuration_key)
-        ):
-            result = None
-            try:
-                if isinstance(self, AsyncModel):
-                    result = AsyncToSync(self.predict)(item, **keyword_args)
-                else:
-                    result = self.predict(item, **keyword_args)
-                assert result == expected
-                console.print(f"[green]TEST {i+1}: SUCCESS[/green]")
-            except AssertionError:
-                console.print(
-                    "[red]TEST {}: FAILED[/red]{} test failed on item".format(
-                        i + 1, " [" + model_key + "]" if model_key else ""
-                    )
-                )
-                t = Tree("item")
-                console.print(describe(item, t=t))
-                t = Tree("expected")
-                console.print(describe(expected, t=t))
-                t = Tree("result")
-                console.print(describe(result, t=t))
-                raise
+        pass
 
     def _check_is_overriden(self):
-        if not hasattr(self._predict, "__not_overriden__"):
-            self._predict_mode = PredictMode.SINGLE
-        if not hasattr(self._predict_batch, "__not_overriden__"):
-            if self._predict_mode == PredictMode.SINGLE:
-                raise BothPredictsOverridenError(
-                    "_predict OR _predict_batch must be overriden, not both"
-                )
-            self._predict_mode = PredictMode.BATCH
-        if not self._predict_mode:
-            raise NoPredictOverridenError(
-                "_predict or _predict_batch must be overriden"
-            )
+        pass
 
 
 def add_dependencies_load_info(load_info_dict, my_model):
@@ -458,9 +384,7 @@ def not_overriden(func: Callable) -> CallableWithAttribute:
     # typing is slightly tricky
     # https://github.com/python/mypy/issues/2087
 
-    func_with_attributes = cast(CallableWithAttribute, func)
-    func_with_attributes.__not_overriden__ = True
-    return func_with_attributes
+    pass
 
 
 class PredictMode(enum.Enum):

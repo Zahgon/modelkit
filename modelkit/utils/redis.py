@@ -30,7 +30,7 @@ def log_after_retry(retry_state):
 
 
 def retriable_error(exception):
-    return isinstance(exception, (AssertionError, redis.ConnectionError))
+    pass
 
 
 @dataclass

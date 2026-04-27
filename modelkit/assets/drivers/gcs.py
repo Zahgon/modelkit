@@ -46,25 +46,15 @@ class GCSStorageDriver(StorageDriver):
 
     @staticmethod
     def build_client(client_configuration: Dict[str, str]) -> Client:
-        sa_path = client_configuration.get("service_account_path")
-        if sa_path:
-            return Client.from_service_account_json(sa_path)
-        return Client()
+        pass
 
     @retry(**GCS_RETRY_POLICY)
     def iterate_objects(self, prefix=None):
-        bucket = self.client.bucket(self.bucket)
-        for blob in bucket.list_blobs(prefix=prefix):
-            yield blob.name
+        pass
 
     @retry(**GCS_RETRY_POLICY)
     def upload_object(self, file_path, object_name):
-        bucket = self.client.bucket(self.bucket)
-        blob = bucket.blob(object_name)
-        storage.blob._DEFAULT_CHUNKSIZE = 2097152  # 2 MB
-        storage.blob._MAX_MULTIPART_SIZE = 2097152  # 2 MB
-        with open(file_path, "rb") as f:
-            blob.upload_from_file(f)
+        pass
 
     @retry(**GCS_RETRY_POLICY)
     def download_object(self, object_name, destination_path):
@@ -84,9 +74,7 @@ class GCSStorageDriver(StorageDriver):
 
     @retry(**GCS_RETRY_POLICY)
     def delete_object(self, object_name):
-        bucket = self.client.bucket(self.bucket)
-        blob = bucket.blob(object_name)
-        blob.delete()
+        pass
 
     @retry(**GCS_RETRY_POLICY)
     def exists(self, object_name):
